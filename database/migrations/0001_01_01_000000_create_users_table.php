@@ -9,6 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+    //to create a user php artisan make:filament-user
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {

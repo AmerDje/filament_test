@@ -4,29 +4,37 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
+use App\Filament\Resources\PostResource\RelationManagers\AuthorsRelationManager;
 use App\Models\Category;
 use App\Models\Post;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -43,6 +51,20 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
+                //we can use taps for long forms
+                // Tabs::make('Create New Post')
+                //     ->tabs([
+                //         Tab::make('Tab 1s')
+                //             ->icon('heroicon-o-rectangle-stack')
+                //             ->iconPosition(IconPosition::After)
+                //             ->badge('Hi')
+                //             ->schema([]),
+                //         Tab::make('Tab 1')
+                //             ->icon('heroicon-o-rectangle-stack')
+                //             ->iconPosition(IconPosition::After)
+                //             ->badge('Hi')
+                //             ->schema([])
+                //     ])->activeTab(2)->persistTabInQueryString(),
                 //here section acts as a card and also it can be given a title, description, and custom spaces
                 Section::make('Add Post')
                     //->collapsible() //make it can collapse
@@ -74,6 +96,8 @@ class PostResource extends Resource
                             //here ('here we define the model name, to make it selectable many make it categories', 'name of column we wanna show')
                             ->relationship('category', 'name')
                             ->searchable()
+                            //to preload options before searching
+                            ->preload()
                             // ->options(
                             //     Category::all()->pluck('name', 'id')
                             // )
@@ -94,7 +118,20 @@ class PostResource extends Resource
                     Section::make('Meta')->description('create the meta of a post')->schema([
                         TagsInput::make('tags'),
                         Checkbox::make('published'),
-                    ])
+                    ]),
+
+                    //  Section::make('Authors')->schema([
+                    //?we handled the cemented below using relationship manager
+                    //authors is relationship name in the model
+                    // Select::make('Authors')
+                    //     ->label('Co Authors')
+                    //     ->multiple()
+                    //     ->relationship('authors', 'name')
+                    // CheckboxList::make('Authors')
+                    //     ->label('Co Authors')
+                    //     ->searchable()
+                    //     ->relationship('authors', 'name')
+                    //  ]),
                 ])->columnSpan(1)
                 //see later what is disk
                 // FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
@@ -136,7 +173,28 @@ class PostResource extends Resource
                     ->toggleable()
             ])
             ->filters([
-                //
+                // Filter::make('Published')->query(
+                //     function (Builder $query): Builder {
+                //         return $query->where('published', true);
+                //     }
+                // ),
+                // Filter::make('Un Published')->query(
+                //     function (Builder $query): Builder {
+                //         return $query->where('published', false);
+                //     }
+                // ),
+                TernaryFilter::make('published'),
+                SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->relationship('category', 'name')
+                    ->searchable()
+                    ->preload()
+                //  ->multiple()
+                //->options(
+                // Category::all()
+                //     ->pluck('name', 'id')
+                //)
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->label(''),
@@ -152,7 +210,8 @@ class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            //to view the others on the page add this
+            AuthorsRelationManager::class
         ];
     }
 

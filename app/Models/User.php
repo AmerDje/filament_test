@@ -45,4 +45,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function posts()
+    {
+        //post users is the tables we want to define many to many relationship in
+        return $this->belongsToMany(Post::class, 'post_users')->withPivot(['order'])->withTimestamps();
+    }
 }

@@ -26,6 +26,13 @@ class Post extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    //post users is the tables we want to define many to many relationship in
+    public function authors()
+    {
+        return $this->belongsToMany(User::class, 'post_users')->withPivot(['order'])->withTimestamps();
+    }
+
     /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
 }
