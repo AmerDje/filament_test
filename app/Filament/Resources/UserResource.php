@@ -58,10 +58,31 @@ class UserResource extends Resource
         return $table
             //the columns section is for defining what columns should be shown in the table
             ->columns([
-                TextColumn::make('id'),
                 TextColumn::make('name'),
                 TextColumn::make('email'),
-                TextColumn::make('role'),
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('role')
+                    ->badge()
+                    ->color(function (string $state): string {
+                        // if ($state == 'ADMIN') return 'danger';
+                        // elseif ($state == 'EDITOR') return 'info';
+                        // else return 'gray';
+                        return match ($state) {
+                            'ADMIN' => 'danger',
+                            'EDITOR' => 'info',
+                            'USER' => 'success',
+                        };
+                    })
+                    ->sortable()
+                    ->searchable(),
+
             ])
             ->filters([
                 //
