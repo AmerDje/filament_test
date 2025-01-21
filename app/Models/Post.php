@@ -28,11 +28,16 @@ class Post extends Model
     }
 
     //post users is the tables we want to define many to many relationship in
+    //when using pivot we should tell which table 
     public function authors()
     {
         return $this->belongsToMany(User::class, 'post_users')->withPivot(['order'])->withTimestamps();
     }
 
+    public function comments()
+    { //call morph commentable function in comments class
+        return $this->morphMany(Comment::class, 'commentable');
+    }
     /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
 }
