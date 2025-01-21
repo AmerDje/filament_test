@@ -36,6 +36,10 @@ class UserResource extends Resource
             ->schema([
                 TextInput::make('name')->required()->maxLength(255),
                 TextInput::make('email')->required()->email(),
+
+                Select::make('role')
+                    ->options(User::ROLES)
+                    ->required(),
                 //in read only we are saying make it read only in this specific page
                 TextInput::make('password')->required()->password()->minLength(8)->readOnlyOn('edit')->visibleOn(['create']),/*visible(false) */
                 // This can be a normal list as follows ['test', 'admin'] or the next format, in both the stored value are the key which is 'name'
@@ -57,6 +61,7 @@ class UserResource extends Resource
                 TextColumn::make('id'),
                 TextColumn::make('name'),
                 TextColumn::make('email'),
+                TextColumn::make('role'),
             ])
             ->filters([
                 //

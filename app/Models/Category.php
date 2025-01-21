@@ -9,7 +9,8 @@ class Category extends Model
 {
     protected $fillable = ['name', 'slug'];
     /** @use HasFactory<\Database\Factories\CategoryFactory> */
-    // to create a resource php artisan make:filament-resource Post
+    // to create a resource php artisan make:filament-resource Post 
+    // we can also add --generate at final so it generates the fields for us
     //the below function should be available to create relationship manager using this command 
     //?php artisan make:filament-relation-manager CategoryResource posts title
     // this gonna show us all the post related to that category
