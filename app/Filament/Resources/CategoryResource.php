@@ -17,6 +17,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class CategoryResource extends Resource
 {
@@ -31,7 +33,25 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')->required(),
+                TextInput::make('name')->required()
+                    ->afterStateUpdated(function (string $operation, string $state, Forms\Set $set, Forms\Get $get, Category $category) {
+                        // this shows a alert screen as terminal dump("hi");
+                        // dump($operation) // return which operation we are using (create or edit)
+                        // dump($state) // return the value written in the field
+                        // $set // gives us the ability to change other fields value
+                        // $get // gets the other values field $get('slug');
+                        // $category // gets all the values of the category model and it returns
+                        //   Log::debug('State value:', ['state' => $state]);
+
+                        if ($operation == 'edit') {
+                            return;
+                        } elseif (is_string($state) && !empty($state)) {
+                            $set('slug', Str::slug($state)); //str($state)->slug()); //converts string to slug
+                        } else {
+                            return; // $set('slug', '');
+                        }
+                    })->live(onBlur: true) // gets called when typing has onBlur  when true it waits until focus is in other place also ->reactive() do same
+                ,
                 Gate::allows('editPanel', User::class)
                     ? TextInput::make('slug')
                     ->label('Admin Slug')
