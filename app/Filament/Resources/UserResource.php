@@ -28,6 +28,11 @@ class UserResource extends Resource
     // this is the tap icon
     protected static ?string $navigationIcon = 'heroicon-o-users'; //Hero Icon / Outline / Users icon
 
+
+    protected static ?string $navigationGroup = "Users";
+    //to sort navigation taps
+    protected static ?int $navigationSort = 3;
+
     // this for defining what should be shown in the create page user forms
     public static function form(Form $form): Form
     {

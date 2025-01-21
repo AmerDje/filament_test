@@ -44,9 +44,15 @@ class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
+
     //to change the shown label
-    protected static ?string $modelLabel = 'All Posts';
+    protected static ?string $modelLabel = 'Posts';
+
+    //name of group should be the same in other models 
+    protected static ?string $navigationGroup = "Blog";
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
