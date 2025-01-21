@@ -28,6 +28,9 @@ class PostUserResource extends Resource
     //to sort taps in navigation
     protected static ?int $navigationSort = 2;
 
+
+    protected static ?string $navigationParentItem = "Posts";
+
     // public static function getNavigationLabel(): string
     // {
     //     return 'Post User';

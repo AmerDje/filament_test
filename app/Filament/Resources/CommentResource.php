@@ -26,6 +26,10 @@ class CommentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
 
+    protected static ?string $navigationGroup = "Users";
+
+    protected static ?int $navigationSort = 4;
+
     public static function form(Form $form): Form
     {
         //we can use comment to comment on room or on employees
