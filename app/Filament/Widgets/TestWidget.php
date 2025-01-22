@@ -5,11 +5,15 @@ namespace App\Filament\Widgets;
 use App\Models\Post;
 use App\Models\User;
 use Filament\Support\Enums\IconPosition;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class TestWidget extends BaseWidget
 {
+
+    use InteractsWithPageFilters;
+
     protected function getStats(): array
     {
         // Fetch user data grouped by creation date
@@ -35,8 +39,30 @@ class TestWidget extends BaseWidget
         $latestPostCount = end($chartPostData); // Get the latest post count
         $chartPostColor = $this->getChartColor($latestPostCount);
 
+        $stDate = $this->filters['startDate'];
+        $ndDate =  $this->filters['endDate'];
         return [
-            Stat::make('New Users', User::count())
+            Stat::make(
+                'New Users',
+                User::when(
+                    $stDate,
+                    fn($query) =>
+                    $query->whereDate(
+                        'created_at',
+                        '>',
+                        $stDate
+                    )
+                )
+                    ->when(
+                        $ndDate,
+                        fn($query) =>
+                        $query->whereDate(
+                            'created_at',
+                            '<',
+                            $ndDate
+                        )
+                    )->count()
+            )
                 ->description('Newly joined users')
                 ->descriptionIcon('heroicon-o-user-group', position: IconPosition::After)
                 ->chart($chartData) // Pass the chart data

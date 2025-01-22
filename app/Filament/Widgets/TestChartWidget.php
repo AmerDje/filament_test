@@ -4,12 +4,17 @@ namespace App\Filament\Widgets;
 
 use App\Models\Post;
 use App\Models\User;
+use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 
 class TestChartWidget extends ChartWidget
 {
+
+    use InteractsWithPageFilters;
+
     protected static ?string $heading = 'Chart';
 
     protected function getType(): string
@@ -20,6 +25,9 @@ class TestChartWidget extends ChartWidget
 
     protected function getData(): array
     {
+        $startDate = $this->filters['startDate'];
+        $endDate = $this->filters['endDate'];
+
         //? using manual for chart
         // $postsData = User::selectRaw('DATE(created_at) as date, COUNT(*) as count')
         //     ->groupBy('date')
@@ -63,24 +71,29 @@ class TestChartWidget extends ChartWidget
         //         ],
         //     ],
         // ];
+        $labelStartDate =  $startDate ? Carbon::parse($startDate) : now()->subMonths(6);
+        $labelEndDate = $endDate ? Carbon::parse($endDate) : now();
+
         //?using external library for chart 
         $data = Trend::model(User::class)
             ->between(
-                start: now()->subMonths(6),
-                end: now(),
+                start: $labelStartDate,
+                end: $labelEndDate,
             )
             ->perMonth()
             ->count();
         //to see how data looks
         //dd($data);
+
+
         return [
             'datasets' => [
                 [
-                    'label' => 'Users',
+                    'label' => "Users Year " . $labelStartDate->format('Y') . "/" . $labelEndDate->format('Y'),
                     'data' => $data->map(fn(TrendValue $value) => $value->aggregate),
                 ],
             ],
-            'labels' => $data->map(fn(TrendValue $value) => $value->date),
+            'labels' => $data->map(fn(TrendValue $value) => Carbon::parse($value->date)->format('M j')),
         ];
     }
 
