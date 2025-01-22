@@ -231,6 +231,7 @@ class PostResource extends Resource
             'index' => Pages\ListPosts::route('/'),
             'create' => Pages\CreatePost::route('/create'),
             'edit' => Pages\EditPost::route('/{record}/edit'),
+            'activities' => Pages\LogPostActivities::route('/{record}/activities'),
         ];
     }
 }

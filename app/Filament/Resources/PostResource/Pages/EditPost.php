@@ -14,6 +14,7 @@ class EditPost extends EditRecord
     {
         return [
             Actions\DeleteAction::make(),
+            Actions\Action::make('activities')->url(fn($record) => PostResource::getUrl('activities', ['record' => $record]))
         ];
     }
 }

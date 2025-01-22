@@ -4,9 +4,34 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Post extends Model
 {
+    /** @use HasFactory<\Database\Factories\PostFactory> */
+    use HasFactory, LogsActivity;
+    // to add activity 
+    /*
+    first install //?composer require spatie/laravel-activitylog
+    then past //? this php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="activitylog-migrations"
+    then do migrate //? php artisan migrate
+    then past this //?php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="activitylog-config"
+    then use LogsActivity
+    then use getActivitylogOptions
+    then do the reset as pxlrbt tells 
+    */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'title',
+                'slug',
+                'content',
+                'category.name'
+            ]);
+        //->logAll();
+    }
     protected $fillable = [
         'thumbnail',
         'title',
@@ -38,6 +63,4 @@ class Post extends Model
     { //call morph commentable function in comments class
         return $this->morphMany(Comment::class, 'commentable');
     }
-    /** @use HasFactory<\Database\Factories\PostFactory> */
-    use HasFactory;
 }
