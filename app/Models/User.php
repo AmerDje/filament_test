@@ -15,7 +15,6 @@ class User extends Authenticatable implements FilamentUser
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-
     const ROLE_ADMIN = 'ADMIN'; //1 //we can use numbers, they say its a little bit faster
     const ROLE_EDITOR = 'EDITOR'; //2
     const ROLE_USER = 'USER'; //3

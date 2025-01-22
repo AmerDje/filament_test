@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\TestChartWidget;
+use App\Filament\Widgets\TestWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -36,14 +38,16 @@ class AdminPanelProvider extends PanelProvider
             // ->pages([
             //     Pages\Dashboard::class,
             // ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            // ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
 
             // disables default widgets
-            //->widgets([
-            //we can add widgets here if they are not detected and also we can control the order from here
-            //Widgets\AccountWidget::class,
-            // Widgets\FilamentInfoWidget::class,
-            //])
+            ->widgets([
+                // we can add widgets here if they are not detected and also we can control the order from here
+                // Widgets\AccountWidget::class,
+                // Widgets\FilamentInfoWidget::class,
+                TestWidget::class,
+                TestChartWidget::class
+            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

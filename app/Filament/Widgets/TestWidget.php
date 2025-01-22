@@ -8,6 +8,7 @@ use Filament\Support\Enums\IconPosition;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Auth;
 
 class TestWidget extends BaseWidget
 {
@@ -42,6 +43,8 @@ class TestWidget extends BaseWidget
         $stDate = $this->filters['startDate'];
         $ndDate =  $this->filters['endDate'];
         return [
+
+            Stat::make('Welcome back!', Auth::user()->name),
             Stat::make(
                 'New Users',
                 User::when(
