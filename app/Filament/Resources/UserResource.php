@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\UserExporter;
+use App\Filament\Imports\UserImporter;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Filament\Forms;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
@@ -20,6 +23,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Actions\ImportAction;
 
 class UserResource extends Resource
 {
@@ -95,9 +100,19 @@ class UserResource extends Resource
             ->actions([
                 EditAction::make(),
             ])
+            ->headerActions([
+                // should import from tables/export
+                ExportAction::make()
+                    ->exporter(UserExporter::class)
+                    //to select which format to export
+                    ->formats([ExportFormat::Csv]),
+                ImportAction::make()->importer(UserImporter::class),
+            ])
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    ExportAction::make()->exporter(UserExporter::class),
+
                 ]),
             ]);
     }
