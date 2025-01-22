@@ -36,10 +36,13 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-            ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
-            ])
+
+            // disables default widgets
+            //->widgets([
+            //we can add widgets here if they are not detected and also we can control the order from here
+            //Widgets\AccountWidget::class,
+            // Widgets\FilamentInfoWidget::class,
+            //])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

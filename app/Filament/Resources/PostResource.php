@@ -106,6 +106,7 @@ class PostResource extends Resource
                             //to preload options before searching
                             ->preload()
                             // ->options(
+                            //pluck makes it like that id=>name
                             //     Category::all()->pluck('name', 'id')
                             // )
                             ->required(),
