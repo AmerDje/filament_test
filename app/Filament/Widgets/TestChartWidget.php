@@ -14,9 +14,20 @@ class TestChartWidget extends ChartWidget
 {
 
     use InteractsWithPageFilters;
-
+    // protected int | string | array $columnSpan = 'full';
     protected static ?string $heading = 'Chart';
+    //should add the same step to make them in one line
+    protected static ?int $sort = 2;
 
+    protected static bool $isLazy = true;
+
+    protected static ?array $options = [
+        'plugins' => [
+            'legend' => [
+                'position' => 'bottom',
+            ],
+        ],
+    ];
     protected function getType(): string
     {
         return 'line';
