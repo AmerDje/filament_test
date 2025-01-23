@@ -32,24 +32,37 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('hello')
+            ->path('admin')
+            ->colors([
+                'danger' => Color::Red,
+                'gray' => Color::Slate,
+                'info' => Color::Blue,
+                'primary' => Color::Indigo,
+                'success' => Color::Emerald,
+                'warning' => Color::Orange,
+            ])
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Dashboard')
+                    ->icon('heroicon-o-cog-6-tooth')
+                    ->url('/app')
+            ])
+            ->font('Inter')
+            ->navigationGroups([
+                'Employee Management',
+                'System Management',
+                'User Management'
+            ])
+            ->favicon(asset('favicon.ico'))
             ->login()
             ->profile()
             // ->userMenuItems([
             //     MenuItem::make('profile')
             //         ->label('Profile')
             //         ->icon('heroicon-o-user-circle')
-            //         ->url(fn() => Auth::check() ? "/hello/users/" . Auth::user()->id . "/edit" : "#")
+            //         ->url(fn() => Auth::check() ? "/admin/users/" . Auth::user()->id . "/edit" : "#")
 
             // ])
-            ->colors([
-                'primary' => Color::Amber,
-                'secondary' => Color::Gray,
-                'danger' => Color::Red,
-                'warning' => Color::Yellow,
-                'success' => Color::Green,
-                'info' => Color::Blue,
-            ])
             ->databaseNotifications() //enables notifications
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
