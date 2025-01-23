@@ -54,8 +54,45 @@ class PostResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return static::getModel()::count() < 10 ? 'warning' : 'success';
+    }
+
     public static function form(Form $form): Form
     {
+        //this for getting value of next filed based on the previous
+        /*  Forms\Components\Select::make('country_id')
+        ->relationship(name: 'country', titleAttribute: 'name')
+        ->searchable()
+        ->preload()
+        ->live()
+        ->afterStateUpdated(function (Set $set) {
+            $set('state_id', null);
+            $set('city_id', null);
+        })
+        ->required(),
+    Forms\Components\Select::make('state_id')
+        ->options(fn (Get $get): Collection => State::query()
+            ->where('country_id', $get('country_id'))
+            ->pluck('name', 'id'))
+        ->searchable()
+        ->preload()
+        ->live()
+        ->afterStateUpdated(fn (Set $set) => $set('city_id', null))
+        ->required(),
+    Forms\Components\Select::make('city_id')
+        ->options(fn (Get $get): Collection => City::query()
+            ->where('state_id', $get('state_id'))
+            ->pluck('name', 'id'))
+        ->searchable()
+        ->preload()
+        ->required(),*/
         return $form
             ->schema([
                 //we can use taps for long forms

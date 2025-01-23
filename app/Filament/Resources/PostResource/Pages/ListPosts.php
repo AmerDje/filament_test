@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\PostResource\Pages;
 
 use App\Filament\Resources\PostResource;
+use App\Models\Post;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use \Filament\Resources\Components\Tab;
@@ -23,12 +24,22 @@ class ListPosts extends ListRecords
     {
         return [
             'All' => Tab::make(),
-            'Published' => Tab::make()->modifyQueryUsing(function (Builder $query) {
-                $query->where('published', true);
-            }),
-            'Un Published' => Tab::make()->modifyQueryUsing(function (Builder $query) {
-                $query->where('published', false);
-            }),
+            'This Week' => Tab::make()
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('created_at', '>=', now()->subWeek()))
+                ->badge(Post::query()->where('created_at', '>=', now()->subWeek())->count()),
+            'This Month' => Tab::make()
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('created_at', '>=', now()->subMonth()))
+                ->badge(Post::query()->where('created_at', '>=', now()->subMonth())->count()),
+            'This Year' => Tab::make()
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('created_at', '>=', now()->subYear()))
+                ->badge(Post::query()->where('created_at', '>=', now()->subYear())->count()),
+            // 'All' => Tab::make(),
+            // 'Published' => Tab::make()->modifyQueryUsing(function (Builder $query) {
+            //     $query->where('published', true);
+            // }),
+            // 'Un Published' => Tab::make()->modifyQueryUsing(function (Builder $query) {
+            //     $query->where('published', false);
+            // }),
         ];
     }
 }
