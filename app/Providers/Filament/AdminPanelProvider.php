@@ -19,6 +19,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Rmsramos\Activitylog\ActivitylogPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -62,6 +63,17 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])->plugins([
+                ActivitylogPlugin::make()->resource(UserResource::class)->label('Log')
+                    ->pluralLabel('Logs')
+                    ->navigationItem(true)
+                    ->navigationGroup('Activity Log')
+                    ->navigationIcon('heroicon-o-shield-check')
+                    ->navigationCountBadge(true)
+                    ->navigationSort(2)
+                // ->authorize(
+                //     fn() => Auth::user()->role === User::ROLE_ADMIN
+                // ),
             ]);
     }
 }

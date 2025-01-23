@@ -25,6 +25,8 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Actions\ImportAction;
+use Rmsramos\Activitylog\Actions\ActivityLogTimelineTableAction;
+use Rmsramos\Activitylog\RelationManagers\ActivitylogRelationManager;
 
 class UserResource extends Resource
 {
@@ -99,6 +101,7 @@ class UserResource extends Resource
             ])
             ->actions([
                 EditAction::make(),
+                ActivityLogTimelineTableAction::make('Activities'),
             ])
             ->headerActions([
                 // should import from tables/export
@@ -120,7 +123,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            ActivitylogRelationManager::class,
         ];
     }
 
