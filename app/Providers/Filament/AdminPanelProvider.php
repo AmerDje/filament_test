@@ -2,12 +2,15 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Resources\UserResource;
 use App\Filament\Widgets\TestChartWidget;
 use App\Filament\Widgets\TestWidget;
+use App\Models\User;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -18,6 +21,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Rmsramos\Activitylog\ActivitylogPlugin;
 
@@ -30,8 +34,21 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('hello')
             ->login()
+            ->profile()
+            // ->userMenuItems([
+            //     MenuItem::make('profile')
+            //         ->label('Profile')
+            //         ->icon('heroicon-o-user-circle')
+            //         ->url(fn() => Auth::check() ? "/hello/users/" . Auth::user()->id . "/edit" : "#")
+
+            // ])
             ->colors([
                 'primary' => Color::Amber,
+                'secondary' => Color::Gray,
+                'danger' => Color::Red,
+                'warning' => Color::Yellow,
+                'success' => Color::Green,
+                'info' => Color::Blue,
             ])
             ->databaseNotifications() //enables notifications
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

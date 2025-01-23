@@ -25,6 +25,11 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Infolists\Components\ColorEntry;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\Section as InfolistSection;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
@@ -38,6 +43,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PostResource extends Resource
@@ -244,6 +250,7 @@ class PostResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()->label(''),
                 Tables\Actions\DeleteAction::make()->label(''),
+                Tables\Actions\ViewAction::make()->label(''),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -260,6 +267,59 @@ class PostResource extends Resource
             AuthorsRelationManager::class,
             CommentsRelationManager::class
         ];
+    }
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                InfolistSection::make('Relationships')
+                    ->schema([
+                        TextEntry::make('category.name'),
+                        // TextEntry::make(
+                        //     'state.name'
+                        // ),
+                        // TextEntry::make(
+                        //     'city.name'
+                        // ),
+                        // TextEntry::make('department.name'),
+                    ])->columns(2),
+                InfolistSection::make('Name')
+                    ->schema([
+                        TextEntry::make('title'),
+                        // TextEntry::make(
+                        //     'middle_name'
+                        // ),
+                        // TextEntry::make(
+                        //     'last_name'
+                        // ),
+                        TextEntry::make('id'),
+                        TextEntry::make('title'),
+                        TextEntry::make('slug'),
+                        TextEntry::make('category.name'),
+                        ColorEntry::make('color'),
+                        ImageEntry::make('thumbnail'),
+                        TextEntry::make('tags'),
+                        TextEntry::make('Is Published')->state(function (Model $record): string {
+                            return $record->published ? 'Yes' : 'No';
+                        }),
+                        TextEntry::make('created_at'),
+                    ])->columns(3),
+                InfolistSection::make('Comments Info')
+                    ->schema([
+                        TextEntry::make('name'),
+                        TextEntry::make('comments_count')
+                            ->state(function (Model $record): int {
+                                return $record->comments()->count();
+                            }),
+                    ])->columns(2)
+                //InfolistSection::make('Address')
+                //     ->schema([
+                //         TextEntry::make('address'),
+                //         TextEntry::make(
+                //             'zip_code'
+                //         ),
+                //     ])->columns(2)
+            ]);
     }
 
     public static function getPages(): array
