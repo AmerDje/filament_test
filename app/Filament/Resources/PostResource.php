@@ -30,6 +30,7 @@ use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\Section as InfolistSection;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
@@ -98,7 +99,39 @@ class PostResource extends Resource
             ->pluck('name', 'id'))
         ->searchable()
         ->preload()
-        ->required(),*/
+        ->required(),
+         Forms\Components\Select::make('relative_id')
+                            ->label('Relative')
+                            ->searchable()
+                            ->required()
+                            ->placeholder('Select a relative')
+                            ->visible(function (Forms\Get $get): ?bool {
+                                return $get('employee_id');
+                            })
+                            ->options(function (Forms\Get $get) {
+                                $employeeId = $get('employee_id');
+                                if ($employeeId) {
+                                    return EmployeeRelative::where('employee_id', $employeeId)->pluck('name', 'id');
+                                }
+                                return [];
+                            }),     
+                        ]),
+                        Forms\Components\Fieldset::make('Medical Service Information')
+                    ->schema([
+                    Forms\Components\Select::make('type_care')
+                    ->required()
+                    ->placeholder('Select a type care')
+                    ->options([
+                    'In-Patient' => 'In-Patient',
+                    'Out-Patient' => 'Out-Patient',
+                ])->live(), 
+                Forms\Components\TextInput::make('approval_number')
+                    ->required()
+                    ->visible(function (Forms\Get $get): ?bool {
+                              return $get('type_care') === 'In-Patient';
+                    })
+                    ->maxLength(255),
+        */
         return $form
             ->schema([
                 //we can use taps for long forms
@@ -251,6 +284,40 @@ class PostResource extends Resource
                 Tables\Actions\EditAction::make()->label(''),
                 Tables\Actions\DeleteAction::make()->label(''),
                 Tables\Actions\ViewAction::make()->label(''),
+                // Tables\Actions\Action::make('assignRoom')
+                //     //->label('Assign Room')
+                //     ->icon('heroicon-s-home')
+                //     ->form([
+                //         Select::make('room_id')
+                //             ->label('Room')
+                //             ->options(Room::all()->pluck('number', 'id'))
+                //             ->required(),
+                //     ])
+                //     ->action(function (Resident $resident, array $data): void {
+                //         $roomId = $data['room_id'];
+
+                //         // End the current assignment if exists
+                //         $currentAssignment = RoomAssignment::where('resident_id', $resident->id)
+                //             ->whereNull('end_date')
+                //             ->first();
+
+                //         if ($currentAssignment) {
+                //             $currentAssignment->update(['end_date' => now()]);
+                //         }
+
+                //         // Create a new assignment
+                //         RoomAssignment::create([
+                //             'resident_id' => $resident->id,
+                //             'room_id' => $roomId,
+                //             'start_date' => now(),
+                //         ]);
+
+                //         Notification::make()
+                //             ->title('Room assigned successfully!')
+                //             ->success()
+                //             ->send();
+                //     }),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
