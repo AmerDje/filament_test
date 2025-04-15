@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -45,6 +47,7 @@ class Post extends Model
     //should cast to array
     protected $casts = [
         'tags' => 'array',
+        //'price' => MoneyCast::class,
     ];
 
     public function category()

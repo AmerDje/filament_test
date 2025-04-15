@@ -188,6 +188,11 @@ class PostResource extends Resource
                             ->required(),
 
                         ColorPicker::make('color')->required(),
+                        // TextInput::make('price')
+                        //     ->required()
+                        //     ->numeric()
+                        //     ->prefix('€')
+                        //     ->maxValue(42949672.95),
                         MarkdownEditor::make('content')->required()->columnSpanFull(), //this make it takes the full with, also we can make it act like a flex and take two times of normal space using columnSpan(N)
 
                         //Textarea::make('slug'),
@@ -233,7 +238,7 @@ class PostResource extends Resource
                 TextColumn::make('id')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('ID'),
+                    ->label('ID')->money('EUR'),
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
@@ -249,7 +254,9 @@ class PostResource extends Resource
                 TextColumn::make('tags')
                     ->searchable()
                     ->sortable(),
-                CheckboxColumn::make('published'),
+                //CheckboxColumn::make('published'),
+                Tables\Columns\IconColumn::make('published')
+                    ->label('Published')->boolean(),
                 TextColumn::make('created_at')
                     ->label('Published On')
                     ->date()
@@ -360,6 +367,7 @@ class PostResource extends Resource
                         //     'last_name'
                         // ),
                         TextEntry::make('id'),
+                        TextEntry::make('sumPosts'),
                         TextEntry::make('title'),
                         TextEntry::make('slug'),
                         TextEntry::make('category.name'),

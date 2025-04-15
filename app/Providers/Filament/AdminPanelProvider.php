@@ -53,7 +53,7 @@ class AdminPanelProvider extends PanelProvider
                 'System Management',
                 'User Management'
             ])
-            ->favicon(asset('favicon.ico'))
+            ->favicon(asset('favicon.ico'))->databaseTransactions()
             ->login()
             ->profile()
             // ->userMenuItems([
